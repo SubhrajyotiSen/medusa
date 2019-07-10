@@ -2,13 +2,13 @@ package com.trendyol.medusalib.navigator
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.trendyol.medusalib.common.extensions.*
+import com.trendyol.medusalib.common.extensions.insertToBottom
+import com.trendyol.medusalib.common.extensions.moveToTop
 import com.trendyol.medusalib.navigator.controller.FragmentManagerController
 import com.trendyol.medusalib.navigator.data.FragmentData
 import com.trendyol.medusalib.navigator.data.StackItem
 import com.trendyol.medusalib.navigator.tag.TagCreator
 import com.trendyol.medusalib.navigator.tag.UniqueTagCreator
-import java.lang.IllegalStateException
 import java.util.*
 
 open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
@@ -40,7 +40,7 @@ open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
     override fun start(fragment: Fragment, tabIndex: Int, fragmentGroupName: String) {
         switchTab(tabIndex)
         start(fragment, fragmentGroupName)
-        navigatorListener?.let { it.onTabChanged(tabIndex) }
+        navigatorListener?.onTabChanged(tabIndex)
     }
 
     override fun start(fragment: Fragment, fragmentGroupName: String) {
