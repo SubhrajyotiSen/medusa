@@ -2,6 +2,7 @@ package com.trendyol.medusa
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,9 +16,9 @@ import com.trendyol.medusalib.navigator.Navigator
 import com.trendyol.medusalib.navigator.NavigatorConfiguration
 import com.trendyol.medusalib.navigator.transaction.NavigatorTransaction
 
-class MainActivity : AppCompatActivity(), Navigator.NavigatorListener {
+class MainActivity : AppCompatActivity(), Navigator.NavigatorListener, Navigator.OnFragmentChangedListener {
 
-    lateinit var navigation: BottomNavigationView
+    private lateinit var navigation: BottomNavigationView
 
     var multipleStackNavigator: MultipleStackNavigator? = null
 
@@ -56,11 +57,12 @@ class MainActivity : AppCompatActivity(), Navigator.NavigatorListener {
         rootFragmentList.add(thirdTabFragment)
 
         multipleStackNavigator = MultipleStackNavigator(
-            supportFragmentManager,
-            R.id.fragmentContainer,
-            rootFragmentList,
-            navigatorListener = this,
-            navigatorConfiguration = NavigatorConfiguration(1, true, NavigatorTransaction.SHOW_HIDE))
+                supportFragmentManager,
+                R.id.fragmentContainer,
+                rootFragmentList,
+                navigatorListener = this,
+                fragmentChangedListener = this,
+                navigatorConfiguration = NavigatorConfiguration(1, true, NavigatorTransaction.SHOW_HIDE))
 
         val restartRootFragmentCheckBox = findViewById<View>(R.id.restartSwitch) as SwitchCompat
         findViewById<Button>(R.id.resetCurrentTab).setOnClickListener { multipleStackNavigator!!.resetCurrentTab(restartRootFragmentCheckBox.isChecked) }
@@ -84,6 +86,14 @@ class MainActivity : AppCompatActivity(), Navigator.NavigatorListener {
             1 -> navigation.selectedItemId = R.id.navigation_dashboard
             2 -> navigation.selectedItemId = R.id.navigation_notifications
         }
+    }
+
+    override fun onFragmentStarted(fragment: Fragment) {
+        Log.d(this.localClassName, "${fragment.tag} started")
+    }
+
+    override fun onFragmentResumed(fragment: Fragment) {
+        Log.d(this.localClassName, "${fragment.tag} resumed")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -159,6 +159,27 @@ interface Navigator {
          */
         fun getNavigatorTransaction(): NavigatorTransaction
     }
+
+    interface OnFragmentChangedListener {
+        /**
+         * Called when a new fragment has been started.
+         *
+         * @param fragment is passed from navigator library and
+         * can be used by the client to perform actions when
+         * a particular fragment is opened
+         */
+        fun onFragmentStarted(fragment: Fragment)
+
+        /**
+         * Called when the user navigates back from a fragment
+         * and enters the parent fragment.
+         *
+         * @param fragment is passed from navigator library and
+         * can be used by the client to perform actions when
+         * a particular fragment is resumed.
+         */
+        fun onFragmentResumed(fragment: Fragment)
+    }
 }
 
 

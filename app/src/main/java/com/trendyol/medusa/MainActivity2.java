@@ -65,6 +65,7 @@ public class MainActivity2 extends AppCompatActivity implements Navigator.Naviga
                 R.id.fragmentContainer,
                 rootFragmentList,
                 this,
+                null,
                 new NavigatorConfiguration(1, true, NavigatorTransaction.SHOW_HIDE));
 
         final SwitchCompat restartRootFragmentCheckBox = findViewById(R.id.restartSwitch);

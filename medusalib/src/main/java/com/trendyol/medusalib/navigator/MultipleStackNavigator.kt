@@ -15,6 +15,7 @@ open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
                                   private val containerId: Int,
                                   private val rootFragments: List<Fragment>,
                                   private var navigatorListener: Navigator.NavigatorListener? = null,
+                                  private val fragmentChangedListener: Navigator.OnFragmentChangedListener? = null,
                                   private val navigatorConfiguration: NavigatorConfiguration = NavigatorConfiguration()) : Navigator {
 
     private val tagCreator: TagCreator = UniqueTagCreator()
@@ -58,6 +59,7 @@ open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
         }
 
         fragmentTagStack[currentTabIndex].push(StackItem(fragmentTag = createdTag, groupName = fragmentGroupName))
+        fragmentChangedListener?.onFragmentStarted(fragment)
     }
 
     override fun goBack() {
@@ -76,7 +78,7 @@ open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
         if (fragmentTagStack[currentTabIndex].size == 1) {
             fragmentManagerController.disableFragment(getCurrentFragmentTag())
             currentTabIndexStack.pop()
-            navigatorListener?.let { it.onTabChanged(currentTabIndexStack.peek()) }
+            navigatorListener?.onTabChanged(currentTabIndexStack.peek())
         } else {
             val currentFragmentTag = fragmentTagStack[currentTabIndex].pop().fragmentTag
             fragmentManagerController.removeFragment(currentFragmentTag)
@@ -203,7 +205,7 @@ open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
         with(fragmentManagerController) {
             addFragment(rootFragmentData)
         }
-        navigatorListener?.let { it.onTabChanged(navigatorConfiguration.initialTabIndex) }
+        navigatorListener?.onTabChanged(navigatorConfiguration.initialTabIndex)
     }
 
     private fun getRootFragment(tabIndex: Int): Fragment = rootFragments[tabIndex]
@@ -214,8 +216,10 @@ open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
             val rootFragment = getRootFragment(currentTabIndexStack.peek())
             val rootFragmentData = FragmentData(rootFragment, upperFragmentTag)
             fragmentManagerController.addFragment(rootFragmentData)
+            fragmentChangedListener?.onFragmentResumed(rootFragment)
         } else {
             fragmentManagerController.enableFragment(upperFragmentTag)
+            fragmentChangedListener?.onFragmentResumed(fragmentManager.findFragmentByTag(upperFragmentTag)!!)
         }
     }
 
