@@ -180,6 +180,12 @@ interface Navigator {
          */
         fun onFragmentResumed(fragment: Fragment)
     }
+
+
+    /**
+     * return index of the current tab
+     */
+    fun getCurrenTabIndex(): Int
 }
 
 

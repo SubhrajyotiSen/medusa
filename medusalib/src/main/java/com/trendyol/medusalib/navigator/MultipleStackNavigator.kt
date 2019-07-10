@@ -188,6 +188,10 @@ open class MultipleStackNavigator(private val fragmentManager: FragmentManager,
         return fragmentManagerController.getFragment(visibleFragmentTag)
     }
 
+    override fun getCurrenTabIndex(): Int {
+        return currentTabIndexStack.peek()
+    }
+
     private fun initializeStackWithRootFragments() {
         for (i in 0 until rootFragments.size) {
             val stack: Stack<StackItem> = Stack()
